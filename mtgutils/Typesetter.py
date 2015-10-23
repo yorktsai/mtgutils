@@ -8,7 +8,7 @@ class Typesetter:
         self._image_fetcher = image_fetcher
 
     def typeset(self, cards, output_dir_path):
-        sample_image = self._image_fetcher.get_image_by_name(cards[0][0])
+        sample_image = self._image_fetcher.get_images_by_name(cards[0][0])[0]
         width = sample_image.size[0]
         height = sample_image.size[1]
 
@@ -20,27 +20,30 @@ class Typesetter:
             name = card[0]
             num = card[1]
 
-            # get image and resize if needed
-            im = self._image_fetcher.get_image_by_name(name)
-            if im.size[0] != width or im.size[1] != height:
-                im = im.resize((width, height))
+            # get images
+            images = self._image_fetcher.get_images_by_name(name)
 
-            for i in range(0, num):
-                # initialize canvas if needed
-                if canvas == None:
-                    canvas = Image.new('RGBA', (width*3, height*3))
-                    canvas_counter = 0
+            for im in images:
+                # resize if needed
+                if im.size[0] != width or im.size[1] != height:
+                    im = im.resize((width, height))
 
-                # paste to canvas
-                canvas.paste(im, (width * (canvas_counter % 3), height * (canvas_counter // 3)))
-                canvas_counter += 1
+                for i in range(0, num):
+                    # initialize canvas if needed
+                    if canvas == None:
+                        canvas = Image.new('RGBA', (width*3, height*3))
+                        canvas_counter = 0
 
-                # output if there are 9 images
-                if canvas_counter == 9:
-                    canvas.save(os.path.join(output_dir_path, str(name_counter) + '.png'), 'PNG')
-                    name_counter += 1
-                    canvas_counter = 0
-                    canvas = None
+                    # paste to canvas
+                    canvas.paste(im, (width * (canvas_counter % 3), height * (canvas_counter // 3)))
+                    canvas_counter += 1
+
+                    # output if there are 9 images
+                    if canvas_counter == 9:
+                        canvas.save(os.path.join(output_dir_path, str(name_counter) + '.png'), 'PNG')
+                        name_counter += 1
+                        canvas_counter = 0
+                        canvas = None
 
         # output if there are remaining image on canvas
         if canvas_counter > 0:
