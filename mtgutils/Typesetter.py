@@ -2,6 +2,7 @@ from mtgutils import ImageFetcher
 import os
 from PIL import Image
 
+
 class Typesetter:
     def __init__(self,
                  image_fetcher: ImageFetcher):
@@ -30,7 +31,7 @@ class Typesetter:
 
                 for i in range(0, num):
                     # initialize canvas if needed
-                    if canvas == None:
+                    if canvas is None:
                         canvas = Image.new('RGBA', (width*3, height*3))
                         canvas_counter = 0
 
@@ -48,7 +49,3 @@ class Typesetter:
         # output if there are remaining image on canvas
         if canvas_counter > 0:
             canvas.save(os.path.join(output_dir_path, str(name_counter) + '.png'), 'PNG')
-
-
-
-

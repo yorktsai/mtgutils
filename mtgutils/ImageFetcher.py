@@ -5,6 +5,7 @@ import re
 import requests
 import time
 
+
 class ImageFetcher:
     def __init__(self):
         # cache directory
