@@ -18,15 +18,17 @@ class ImageFetcher:
             os.mkdir(self.btype_cache_dir_path)
 
     def get_images_by_name(self, name):
+        name = name.replace("//", "/")
+        filename = name.replace("/", "_")
         rt = []
 
         # check cache file
-        cache_filepath = os.path.join(self._cache_dir_path, name + ".jpg")
+        cache_filepath = os.path.join(self._cache_dir_path, filename + ".jpg")
         if os.path.exists(cache_filepath):
             rt.append(Image.open(cache_filepath))
 
         # check b-type cache
-        btype_filepath = os.path.join(self._cache_dir_path, "btype", name + ".jpg")
+        btype_filepath = os.path.join(self._cache_dir_path, "btype", filename + ".jpg")
         if os.path.exists(btype_filepath):
             rt.append(Image.open(btype_filepath))
 
